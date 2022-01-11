@@ -842,14 +842,14 @@ WinMainCRTStartup()
                     u32 pad[10] = {
                         (longest_name            - (u32)info->name.size)       / 2,
                         (longest_name            - (u32)info->name.size   + 1) / 2,
-                        (longest_total_lines     - total_lines_length)         / 2,
-                        (longest_total_lines     - total_lines_length     + 1) / 2,
-                        (longest_commented_lines - commented_lines_length)     / 2,
-                        (longest_commented_lines - commented_lines_length + 1) / 2,
-                        (longest_empty_lines     - empty_lines_length)         / 2,
-                        (longest_empty_lines     - empty_lines_length     + 1) / 2,
-                        (longest_computed_loc    - computed_loc_length)        / 2,
-                        (longest_computed_loc    - computed_loc_length    + 1) / 2,
+                        (longest_total_lines     - total_lines_length),
+			0,
+                        (longest_commented_lines - commented_lines_length),
+			0,
+                        (longest_empty_lines     - empty_lines_length),
+			0,
+                        (longest_computed_loc    - computed_loc_length),
+			0,
                     };
                     
                     Print("| %*%S%* | %*%u%* | %*%u%* | %*%u%* | %*%u%* |\n", ' ', pad[0], info->name, ' ', pad[1], ' ', pad[2], info->total_lines, ' ', pad[3], ' ', pad[4], info->commented_lines, ' ', pad[5], ' ', pad[6], info->empty_lines, ' ', pad[7], ' ', pad[8], info->computed_loc, ' ', pad[9]);
