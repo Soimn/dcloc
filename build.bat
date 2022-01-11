@@ -11,7 +11,7 @@ pushd .\build
 set "compile_options= /DMM_DEBUG %nocrt_options% %diag_options% /Od /Zo /Zf /Z7"
 set "link_options= /INCREMENTAL:NO /opt:ref /STACK:0x100000,0x100000 /NODEFAULTLIB /SUBSYSTEM:console"
 
-cl %compile_options% ..\src\main.c /link %link_options% /PDB:dcloc.pdb /ENTRY:WinMainCRTStartup Kernel32.lib Winmm.lib User32.lib Shell32.lib Shlwapi.lib /out:dcloc.exe
+cl %compile_options% ..\src\main.c /link %link_options% /PDB:dcloc.pdb /ENTRY:WinMainCRTStartup Kernel32.lib /out:dcloc.exe
 
 del main.obj
 

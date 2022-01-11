@@ -3,8 +3,6 @@
 #define WIN32_MEAN_AND_LEAN 1
 #define VC_EXTRALEAN        1
 #include <windows.h>
-#include <shellapi.h>
-#include <shlwapi.h>
 #undef NOMINMAX
 #undef WIN32_LEAN_AND_MEAN
 #undef WIN32_MEAN_AND_LEAN
@@ -593,8 +591,18 @@ WinMainCRTStartup()
         
         HANDLE find_handle = FindFirstFileA((LPCSTR)path, &find_data);
         
-        if (find_handle == 0 || !PathRemoveFileSpecA((LPSTR)path) ||
-            !SetCurrentDirectory((LPCSTR)path))
+        u8* last_slash = path;
+        for (scan = path; *scan != 0; ++scan)
+        {
+            if (*scan == '\\' || *scan == '//')
+            {
+                last_slash = scan;
+            }
+        }
+        
+        *last_slash = 0;
+        
+        if (find_handle == 0 || !SetCurrentDirectory((LPCSTR)path))
         {
             Print("ERROR: Failed to query files");
         }
