@@ -806,8 +806,6 @@ WinMainCRTStartup()
                     longest_computed_loc    = (u32)MAX(longest_computed_loc, String_Format((Buffer){0}, "%u", file_infos[i].computed_loc) - 1);
                 }
                 
-                umm horiz_line_length = 2 + longest_name + 3 + longest_total_lines + 3 + longest_commented_lines + 3 + longest_empty_lines + 3 + longest_computed_loc + 2;
-                
                 {
                     u32 pad[10] = {
                         (longest_name            - (sizeof("File Name")       - 1))     / 2,
@@ -822,9 +820,9 @@ WinMainCRTStartup()
                         (longest_computed_loc    - (sizeof("Computed LoC")    - 1) + 1) / 2,
                     };
                     
-                    Print("%*\n", '-', horiz_line_length);
+                    Print("+%*+%*+%*+%*+%*+\n", '-', longest_name + 2, '-', longest_total_lines + 2, '-', longest_commented_lines + 2, '-', longest_empty_lines + 2, '-', longest_computed_loc + 2);
                     Print("| %*%s%* | %*%s%* | %*%s%* | %*%s%* | %*%s%* |\n", ' ', pad[0], "File Name", ' ', pad[1], ' ', pad[2], "Total Lines", ' ', pad[3], ' ', pad[4], "Commented Lines", ' ', pad[5], ' ', pad[6], "Empty Lines", ' ', pad[7], ' ', pad[8], "Computed LoC", ' ', pad[9]);
-                    Print("%*\n", '-', horiz_line_length);
+                    Print("+%*+%*+%*+%*+%*+\n", '-', longest_name + 2, '-', longest_total_lines + 2, '-', longest_commented_lines + 2, '-', longest_empty_lines + 2, '-', longest_computed_loc + 2);
                 }
                 
                 umm total_computed_loc[CODE_KIND_COUNT] = {0};
@@ -842,19 +840,19 @@ WinMainCRTStartup()
                     u32 pad[10] = {
                         (longest_name            - (u32)info->name.size)       / 2,
                         (longest_name            - (u32)info->name.size   + 1) / 2,
-                        (longest_total_lines     - total_lines_length),
-			0,
-                        (longest_commented_lines - commented_lines_length),
-			0,
-                        (longest_empty_lines     - empty_lines_length),
-			0,
-                        (longest_computed_loc    - computed_loc_length),
-			0,
+                        (longest_total_lines     - total_lines_length)         / 2,
+                        (longest_total_lines     - total_lines_length     + 1) / 2,
+                        (longest_commented_lines - commented_lines_length)     / 2,
+                        (longest_commented_lines - commented_lines_length + 1) / 2,
+                        (longest_empty_lines     - empty_lines_length)         / 2,
+                        (longest_empty_lines     - empty_lines_length     + 1) / 2,
+                        (longest_computed_loc    - computed_loc_length)        / 2,
+                        (longest_computed_loc    - computed_loc_length    + 1) / 2,
                     };
                     
                     Print("| %*%S%* | %*%u%* | %*%u%* | %*%u%* | %*%u%* |\n", ' ', pad[0], info->name, ' ', pad[1], ' ', pad[2], info->total_lines, ' ', pad[3], ' ', pad[4], info->commented_lines, ' ', pad[5], ' ', pad[6], info->empty_lines, ' ', pad[7], ' ', pad[8], info->computed_loc, ' ', pad[9]);
                     
-                    Print("%*\n", '-', horiz_line_length);
+                    Print("+%*+%*+%*+%*+%*+\n", '-', longest_name + 2, '-', longest_total_lines + 2, '-', longest_commented_lines + 2, '-', longest_empty_lines + 2, '-', longest_computed_loc + 2);
                     
                     total_computed_loc[info->kind] += info->computed_loc;
                     total_lines[info->kind]        += info->total_lines;
