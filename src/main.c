@@ -531,6 +531,7 @@ typedef struct File_Info
     u32 commented_lines;
     u32 empty_lines;
     u32 computed_loc;
+    f32 average_line_length;
 } File_Info;
 
 internal void
@@ -704,6 +705,7 @@ WinMainCRTStartup()
                         {
                             file_content[info->file_size] = 0;
                             
+							u8* line_start = file_content;
                             for (scan = file_content; *scan != 0; ++scan)
                             {
                                 while (*scan != 0 && *scan != '\n' && IsWhitespace(*scan)) ++scan;
@@ -715,7 +717,11 @@ WinMainCRTStartup()
                                     {
                                         info->commented_lines += 1;
                                         info->total_lines     += 1;
-                                        ++scan;
+
+										info->average_line_length += ((scan - line_start) - info->average_line_length) / info->total_lines;
+															
+										++scan;
+										line_start = scan;
                                     }
                                 }
                                 
@@ -757,7 +763,11 @@ WinMainCRTStartup()
                                     {
                                         info->commented_lines += 1;
                                         info->total_lines     += 1;
-                                        ++scan;
+
+										info->average_line_length += ((scan - line_start) - info->average_line_length) / info->total_lines;
+															
+										++scan;
+										line_start = scan;
                                     }
                                 }
                                 
@@ -767,7 +777,11 @@ WinMainCRTStartup()
                                     {
                                         info->empty_lines += 1;
                                         info->total_lines += 1;
-                                        ++scan;
+
+										info->average_line_length += ((scan - line_start) - info->average_line_length) / info->total_lines;
+															
+										++scan;
+										line_start = scan;
                                     }
                                     
                                     else
@@ -776,7 +790,11 @@ WinMainCRTStartup()
                                         if (*scan == '\n')
                                         {
                                             info->total_lines += 1;
-                                            ++scan;
+
+											info->average_line_length += ((scan - line_start) - info->average_line_length) / info->total_lines;
+											
+											++scan;
+											line_start = scan;
                                         }
                                     }
                                 }
@@ -835,6 +853,7 @@ WinMainCRTStartup()
                 
                 umm total_computed_loc[CODE_KIND_COUNT] = {0};
                 umm total_lines[CODE_KIND_COUNT]        = {0};
+                f32 avg_line_lengths[CODE_KIND_COUNT]   = {0};
                 
                 for (umm i = 0; i < file_info_count; ++i)
                 {
@@ -864,6 +883,7 @@ WinMainCRTStartup()
                     
                     total_computed_loc[info->kind] += info->computed_loc;
                     total_lines[info->kind]        += info->total_lines;
+					avg_line_lengths[info->kind]   += (info->total_lines*info->average_line_length - avg_line_lengths[info->kind]) / total_lines[info->kind];
                 }
                 
                 String lang_name[CODE_KIND_COUNT] = {
@@ -890,6 +910,15 @@ WinMainCRTStartup()
                     if (total_lines[i] != 0)
                     {
                         Print("%S: %U\n", lang_name[i], total_lines[i]);
+                    }
+                }
+
+                Print("\nAverage Line Length\n");
+                for (umm i = 0; i < ARRAY_SIZE(avg_line_lengths); ++i)
+                {
+                    if (avg_line_lengths[i] != 0)
+                    {
+                        Print("%S: %U\n", lang_name[i], (u64)avg_line_lengths[i]);
                     }
                 }
             }
