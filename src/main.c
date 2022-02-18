@@ -706,7 +706,7 @@ WinMainCRTStartup()
                             file_content[info->file_size] = 0;
                             
 							u8* line_start = file_content;
-                            for (scan = file_content; *scan != 0; ++scan)
+                            for (scan = file_content; *scan != 0; scan += (*scan != 0)) // HACK
                             {
                                 while (*scan != 0 && *scan != '\n' && IsWhitespace(*scan)) ++scan;
                                 
@@ -717,9 +717,9 @@ WinMainCRTStartup()
                                     {
                                         info->commented_lines += 1;
                                         info->total_lines     += 1;
-
+                                        
 										info->average_line_length += ((scan - line_start) - info->average_line_length) / info->total_lines;
-															
+                                        
 										++scan;
 										line_start = scan;
                                     }
@@ -763,9 +763,9 @@ WinMainCRTStartup()
                                     {
                                         info->commented_lines += 1;
                                         info->total_lines     += 1;
-
+                                        
 										info->average_line_length += ((scan - line_start) - info->average_line_length) / info->total_lines;
-															
+                                        
 										++scan;
 										line_start = scan;
                                     }
@@ -777,9 +777,9 @@ WinMainCRTStartup()
                                     {
                                         info->empty_lines += 1;
                                         info->total_lines += 1;
-
+                                        
 										info->average_line_length += ((scan - line_start) - info->average_line_length) / info->total_lines;
-															
+                                        
 										++scan;
 										line_start = scan;
                                     }
@@ -790,7 +790,7 @@ WinMainCRTStartup()
                                         if (*scan == '\n')
                                         {
                                             info->total_lines += 1;
-
+                                            
 											info->average_line_length += ((scan - line_start) - info->average_line_length) / info->total_lines;
 											
 											++scan;
@@ -912,7 +912,7 @@ WinMainCRTStartup()
                         Print("%S: %U\n", lang_name[i], total_lines[i]);
                     }
                 }
-
+                
                 Print("\nAverage Line Length\n");
                 for (umm i = 0; i < ARRAY_SIZE(avg_line_lengths); ++i)
                 {
